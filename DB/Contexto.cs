@@ -10,12 +10,11 @@ public class SCCContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Curso>().ToTable("Curso"):
-        modelBuilder.Entity<Capitulo>()
-        .HasOne<Curso>()
-        .WithMany()
-        .HasForeignKey(p => p.CursoId)
-        .ToTable("Capitulo");
-        modelBuilder.Entity<Evaluacion>().ToTable("Evaluacion");
+        modelBuilder.Entity<Curso>()
+        .HasMany<Capitulo>(c => c.Capitulos).WithOne().HasForeignKey(c => c.CursoID);
+        modelBuilder.Entity<Curso>()
+        .HasMany<Evaluacion>(e => e.Evaluaciones).WithOne().HasForeignKey(e => e.CursoID);
+        modelBuilder.Entity<Capitulo>();
+        modelBuilder.Entity<Evaluacion>();
     }
 }

@@ -16,13 +16,13 @@ public class CursosController : ControllerBase
     [HttpGet(Name = "GetCursos")]
     public IEnumerable<Curso> Get()
     {
-        return _db.Cursos.ToList();
+        return _db.Cursos.Include(c => c.Capitulos).Include(e => e.Evaluaciones).ToList();
     }
 
     [HttpGet("{id}", Name = "GetCurso")]
     public Curso Get(int id)
     {
-        return _db.Cursos.FirstOrDefault(x => x.Id == id);
+        return _db.Cursos.Include(c => c.Capitulos).Include(e => e.Evaluaciones).FirstOrDefault(x => x.ID == id);
     }
 
     [HttpPost(Name = "PostCurso")]
@@ -36,18 +36,18 @@ public class CursosController : ControllerBase
         _db.Cursos.Add(curso);
         _db.SaveChanges();
 
-        return CreatedAtRoute("GetCurso", new { id = curso.Id }, curso);
+        return CreatedAtRoute("GetCurso", new { id = curso.ID }, curso);
     }
 
     [HttpPut("{id}", Name = "PutCurso")]
     public IActionResult Put(int id, [FromBody] Curso curso)
     {
-        if (curso == null || curso.Id != id)
+        if (curso == null || curso.ID != id)
         {
             return BadRequest();
         }
 
-        var cursoDb = _db.Cursos.FirstOrDefault(x => x.Id == id);
+        var cursoDb = _db.Cursos.FirstOrDefault(x => x.ID == id);
         if (cursoDb == null)
         {
             return NotFound();
@@ -68,7 +68,7 @@ public class CursosController : ControllerBase
     [HttpDelete("{id}", Name = "DeleteCurso")]
     public IActionResult Delete(int id)
     {
-        var cursoDb = _db.Cursos.FirstOrDefault(x => x.Id == id);
+        var cursoDb = _db.Cursos.FirstOrDefault(x => x.ID == id);
         if (cursoDb == null)
         {
             return NotFound();
